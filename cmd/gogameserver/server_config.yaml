@@ -1,0 +1,6 @@
+MaxConnections: 5
+MaxMessageSize: 512000
+Timeout: 5
+UDPListeners:
+- ip: ""
+  port: "10001"
