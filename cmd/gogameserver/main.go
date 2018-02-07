@@ -23,12 +23,15 @@ func main() {
 
 	conf := config.Read()
 
+	listeners := make([]server.Listener, 0, len(conf.UDPListeners))
+
 	for i := 0; i < len(conf.UDPListeners); i++ {
 		listener := conf.UDPListeners[i]
 		listenerAddress := fmt.Sprintf("%s:%s", listener.Ip, listener.Port)
 		udpListener := server.NewUDPListener(listenerAddress)
 		udpListener.Listen()
 		defer udpListener.Close()
+		listeners = append(listeners, udpListener)
 	}
 
 	/* Lets prepare a address at any address at port 10001*/
@@ -41,6 +44,11 @@ func main() {
 	//defer ServerConn.Close()
 
 	for {
+		//Main Loop
+		select {
+		case msg := <-listeners[0].Packets():
+			fmt.Println("packet message", msg)
+		}
 
 	}
 
